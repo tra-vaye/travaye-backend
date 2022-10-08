@@ -3,6 +3,7 @@ import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import userRouter from "./routes/userRoutes.js";
+import businessRouter from "./routes/businessRoutes.js";
 
 // Constants
 dotenv.config();
@@ -11,6 +12,7 @@ const app = express();
 // Middlewares
 app.use(express.json());
 app.use("/api/user", userRouter);
+app.use("/api/business", businessRouter);
 
 // Server Listener
 async function connectDbAndListen() {
