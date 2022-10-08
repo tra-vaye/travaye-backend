@@ -7,13 +7,19 @@ import { User } from "../models/userModel.js";
 
 // Token Generator
 const createToken = (_id) => {
-  return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "3d" });
+  return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "5d" });
 };
 
 // Gets all Users records
 export const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find({});
+    let users = await User.find({});
+    //   Modifying the data to avoid revealing the users Hash
+    users = users.map((user) => {
+      const { _id, fullname, username, email } = user;
+      user = { _id, fullname, username, email };
+      return user;
+    });
     return res.status(200).json(users);
   } catch (error) {
     return res.status(404).json(error);
@@ -26,7 +32,15 @@ export const createNewUser = async (req, res) => {
   try {
     const createdUser = await User.signup(username, password, email, fullname);
     const token = createToken(createdUser._id);
-    return res.status(200).json({ token, ...createdUser._doc });
+    //   Modifying the data to avoid revealing the users Hash
+    let createdUserDoc = createdUser._doc;
+    createdUserDoc = {
+      _id: createdUserDoc._id,
+      email: createdUserDoc.email,
+      fullname: createdUserDoc.fullname,
+      username: createdUserDoc.username,
+    };
+    return res.status(200).json({ token, ...createdUserDoc });
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }
@@ -71,8 +85,15 @@ export const userLogin = async (req, res) => {
   try {
     const loggedInUser = await User.login(email, password);
     const token = createToken(loggedInUser._id);
-
-    return res.status(200).json({ token, ...loggedInUser._doc });
+    let loggedInUserDoc = loggedInUser._doc;
+    //   Modifying the data to avoid revealing the users Hash
+    loggedInUserDoc = {
+      _id: loggedInUserDoc._id,
+      email: loggedInUserDoc.email,
+      fullname: loggedInUserDoc.fullname,
+      username: loggedInUserDoc.username,
+    };
+    return res.status(200).json({ token, ...loggedInUserDoc });
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }

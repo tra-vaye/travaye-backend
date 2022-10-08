@@ -53,6 +53,10 @@ userSchema.statics.signup = async function (
   if (ifEmailExists) {
     throw Error("Email in use");
   }
+  const ifUsernameExists = await this.findOne({ username });
+  if (ifUsernameExists) {
+    throw Error("This Username is not available. Try another");
+  }
   // Encryption
   const salt = await bcrypt.genSalt(13);
   const hashedPassword = await bcrypt.hash(password, salt);
