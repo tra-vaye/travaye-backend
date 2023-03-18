@@ -1,30 +1,65 @@
 {
-  "name": "travaye-backend",
-  "type":"module",
-  "version": "1.0.0",
-  "description": "Official Backend Source Code for Travaye Web App.",
-  "main": "index.js",
-  "scripts": {
-    "start":"nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Zuxxypml/travaye-backend.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Zuxxypml/travaye-backend/issues"
-  },
-  "homepage": "https://github.com/Zuxxypml/travaye-backend#readme",
+  
+  "type": "module",
+  
   "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "dotenv": "^16.0.3",
-    "express": "^4.18.1",
-    "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.6.5",
-    "validator": "^13.7.0"
-  }
+  
+    
+  "bcryptjs": "^2.4.3",
+  
+    
+  "cookie-parser": "^1.4.6",
+  
+    
+  "cors": "^2.8.5",
+  
+    
+  "dotenv": "^16.0.3",
+  
+    
+  "express": "^4.18.2",
+  
+    
+  "express-session": "^1.17.3",
+  
+    
+  "mongoose": "^7.0.2",
+  
+    
+  "mongoose-findorcreate": "^3.0.0",
+  
+    
+  "passport": "^0.6.0",
+  
+    
+  "passport-facebook": "^3.0.0",
+  
+    
+  "passport-google-oauth20": "^2.0.0",
+  
+    
+  "passport-local-mongoose": "^8.0.0"
+  
+  },
+  
+  "scripts": {
+  
+    
+  "start": "nodemon server.js"
+  
+  },
+  
+  "name": "travaye-backenv2",
+  
+  "version": "1.0.0",
+  
+  "main": "server.js",
+  
+  "keywords": [],
+  
+  "author": "",
+  
+  "license": "ISC",
+  
+  "description": ""
 }
