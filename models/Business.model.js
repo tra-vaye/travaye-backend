@@ -27,12 +27,27 @@ const businessSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    verificationCode: {
+      type: Number,
+      required: true,
+    },
+    verified: {
+      type: Boolean,
+      default: false,
+    },
+    businessVerified: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
   }
 );
-businessSchema.plugin(passportLocalMongoose);
+const options = {
+  usernameField: "businessEmail",
+};
+businessSchema.plugin(passportLocalMongoose, options);
 businessSchema.plugin(findOrCreate);
 
 // Exporting Model

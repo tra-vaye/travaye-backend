@@ -1,3 +1,4 @@
+import bcrypt from "bcryptjs";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -8,6 +9,7 @@ import passport from "passport";
 import passportLocal from "passport-local";
 import { Business } from "./models/Business.model.js";
 import { User } from "./models/User.model.js";
+import businessRouter from "./routes/business.routes.js";
 import userRouter from "./routes/user.routes.js";
 const LocalStrategy = passportLocal.Strategy;
 
@@ -15,7 +17,12 @@ const LocalStrategy = passportLocal.Strategy;
 const app = express();
 dotenv.config();
 app.use(express.json());
-var whitelist = ["http://localhost:3000", "http://example2.com"];
+var whitelist = [
+  "http://localhost:3000",
+  "http://www.localhost:3000",
+  "http://172.20.10.9:3000",
+  "http://www.172.20.10.9:3000",
+];
 var corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
@@ -25,16 +32,7 @@ var corsOptions = {
     }
   },
 };
-// var whitelist = ["http://example1.com", "http://example2.com"];
-// var corsOptionsDelegate = function (req, callback) {
-//   var corsOptions;
-//   if (whitelist.indexOf(req.header("Origin")) !== -1) {
-//     corsOptions = { origin: true }; // reflect (enable) the requested origin in the CORS response
-//   } else {
-//     corsOptions = { origin: false }; // disable CORS for this request
-//   }
-//   callback(null, corsOptions); // callback expects two parameters: error and options
-// };
+
 app.use(cors(corsOptions));
 app.use(
   session({
@@ -52,12 +50,40 @@ function SessionConstructor(userId, userGroup, details) {
   this.userGroup = userGroup;
   this.details = details;
 }
-// Serialisation for Local Users
-passport.use(User.createStrategy());
-passport.use(Business.createStrategy());
+// Serialisation for Local Usersf
+// passport.use(User.createStrategy());
+// passport.use(Business.createStrategy());
 
-passport.use("userLocal", new LocalStrategy(User.authenticate()));
-passport.use("businessLocal", new LocalStrategy(Business.authenticate()));
+passport.use(
+  "userLocal",
+  new LocalStrategy({ usernameField: "username" }, User.authenticate())
+);
+const businessStrategy = new LocalStrategy(
+  {
+    usernameField: "businessEmail",
+    passwordField: "password",
+    session: true,
+  },
+  async function (businessEmail, password, done) {
+    // find user by email and password using Model2
+    Business.findOne({ businessEmail: businessEmail })
+      .then(async (user) => {
+        console.log(user);
+        if (!user) {
+          return done(null, false, { message: "User doesn't Exist" });
+        }
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+          return done(null, false, { message: "Incorrect email or password." });
+        }
+
+        return done(null, user);
+      })
+      .catch((err) => done(err));
+  }
+);
+passport.use("businessLocal", businessStrategy);
+
 // used to serialize the user for the session
 passport.serializeUser(function (userObject, done) {
   let userGroup = "User";
@@ -82,9 +108,32 @@ passport.deserializeUser(function (sessionContructor, done) {
     });
   }
 });
+// const localStrategy2 = new LocalStrategy(
+//   {
+//     usernameField: "email",
+//     passwordField: "password",
+//     session: false,
+//   },
+//   function (email, password, done) {
+//     // find user by email and password using Model2
+//     Business.findOne(
+//       { email: email, password: password },
+//       function (err, user) {
+//         if (err) {
+//           return done(err);
+//         }
+//         if (!user) {
+//           return done(null, false, { message: "Incorrect email or password." });
+//         }
+//         return done(null, user);
+//       }
+//     );
+//   }
+// );
 
 // Route Middlewares
 app.use("/api/user", userRouter);
+app.use("/api/business", businessRouter);
 
 // Server Listener
 async function connectDbAndListen() {

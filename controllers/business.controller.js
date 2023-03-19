@@ -1,29 +1,34 @@
 import bcrypt from "bcryptjs";
 import passport from "passport";
-import { User } from "../models/User.model.js";
+import { Business } from "../models/Business.model.js";
 
-export const registerUser = async (req, res, next) => {
-  const username = req.body.username;
-  const email = req.body.email;
+export const registerBusiness = async (req, res, next) => {
+  const businessName = req.body.businessName;
+  const businessEmail = req.body.businessEmail;
   const password = req.body.password;
-  const fullName = req.body.fullName;
+  const address = req.body.address;
 
   // Encryption
   const salt = await bcrypt.genSalt(13);
   const hashedPassword = await bcrypt.hash(password, salt);
-  User.register(
+  let verificationCode = Math.floor(Math.random() * 9000) + 1000;
+
+  // Display the verificationCode
+  console.log(verificationCode);
+  Business.register(
     {
-      username: username,
-      email: email,
-      fullName: fullName,
+      businessName: businessName,
+      businessEmail: businessEmail,
+      address: address,
       password: hashedPassword,
+      verificationCode: verificationCode,
     },
     password,
     function (err, user) {
       if (err) {
         console.log(err);
         res.status(400).json({
-          error: "A User with the given username or email exists",
+          error: "A Business with the given username or email exists",
         });
       } else if (!err) {
         next();
@@ -34,8 +39,8 @@ export const registerUser = async (req, res, next) => {
   );
 };
 
-export const loginUser = (req, res, next) => {
-  passport.authenticate("userLocal", function (err, user, info) {
+export const loginBusiness = (req, res, next) => {
+  passport.authenticate("businessLocal", function (err, user, info) {
     console.log(user);
     if (err) {
       return next(err);
@@ -44,7 +49,7 @@ export const loginUser = (req, res, next) => {
       // *** Display message without using flash option
       // re-render the login form with a message
       return res.status(400).json({
-        error: "Invalid username or password",
+        error: "Invalid email or password",
       });
     }
     req.logIn(user, function (err) {
@@ -55,8 +60,13 @@ export const loginUser = (req, res, next) => {
     });
   })(req, res, next);
 };
+export const currentUser = (req, res) => {
+  if (req.isAuthenticated()) {
+    return req.user;
+  }
+};
 // Logout
-export const logUserOut = (req, res) => {
+export const logBusinessOut = (req, res) => {
   req.logOut();
   res.redirect("/login");
 };
