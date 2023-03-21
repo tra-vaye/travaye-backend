@@ -22,6 +22,8 @@ var whitelist = [
   "http://www.localhost:3000",
   "http://172.20.10.9:3000",
   "http://www.172.20.10.9:3000",
+  "https://travaye-beta.netlify.app",
+  "https://www.travaye-beta.netlify.app",
 ];
 var corsOptions = {
   origin: function (origin, callback) {
