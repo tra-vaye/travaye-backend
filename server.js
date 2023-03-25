@@ -137,6 +137,8 @@ passport.deserializeUser(function (sessionContructor, done) {
 app.use("/api/user", userRouter);
 app.use("/api/business", businessRouter);
 
+// Send a Fake email
+// sendVerifyEmail("adebisiakinade.123@gmail.com", "2314");
 // Server Listener
 async function connectDbAndListen() {
   try {

@@ -1,6 +1,10 @@
 import express from "express";
 import passport from "passport";
-import { loginUser, registerUser } from "../controllers/user.controller.js";
+import {
+  loginUser,
+  registerUser,
+  verifyUser,
+} from "../controllers/user.controller.js";
 
 // Created an express routing instance
 const userRouter = express.Router();
@@ -30,5 +34,6 @@ userRouter.route("/").post(registerUser, (req, res, next) => {
   })(req, res, next);
 }); // http://localhost:8080/api/user/
 userRouter.route("/login").post(loginUser);
+userRouter.route("/verify").post(verifyUser);
 
 export default userRouter;

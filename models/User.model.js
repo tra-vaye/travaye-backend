@@ -3,8 +3,8 @@
 
 // Necessary Imports
 import mongoose from "mongoose";
-import passportLocalMongoose from "passport-local-mongoose";
 import findOrCreate from "mongoose-findorcreate";
+import passportLocalMongoose from "passport-local-mongoose";
 
 // User Schema Structure
 const userSchema = new mongoose.Schema(
@@ -26,6 +26,13 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
+    },
+    verificationCode: {
+      type: Number,
+    },
+    verified: {
+      type: Boolean,
+      default: false,
     },
   },
   {

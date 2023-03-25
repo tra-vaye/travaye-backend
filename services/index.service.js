@@ -1,3 +1,3 @@
-// import { sendVerifyEmail } from "./mail/mail.service.js";
+import { sendVerifyEmail } from "./mail/mail.service.js";
 
-// export default sendVerifyEmail;
+export default sendVerifyEmail;
