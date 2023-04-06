@@ -45,3 +45,11 @@ export const createLocation = async (req, res) => {
     res.status(400).json({ error: "Failed to add location" });
   }
 };
+export const getAllLocations = async (req, res) => {
+  try {
+    const locations = await Location.find({});
+    return res.status(200).json({ locations });
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+};

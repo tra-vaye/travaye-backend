@@ -18,6 +18,7 @@ import { Business } from "./models/Business.model.js";
 import { User } from "./models/User.model.js";
 import businessRouter from "./routes/business.routes.js";
 import userRouter from "./routes/user.routes.js";
+import locationRouter from "./routes/location.routes.js";
 const LocalStrategy = passportLocal.Strategy;
 
 /* CONFIGURATIONS */
@@ -139,6 +140,7 @@ app.post("/location", upload.single("picture"), createLocation);
 // ROUTES
 app.use("/api/user", userRouter);
 app.use("/api/business", businessRouter);
+app.use("/api/location", locationRouter);
 
 // Server Listener
 async function connectDbAndListen() {
