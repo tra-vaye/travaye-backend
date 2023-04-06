@@ -29,6 +29,7 @@ userRouter.route("/").post(registerUser, (req, res, next) => {
       if (err) {
         return next(err);
       }
+      user.password = undefined;
       return res.status(200).json({ user });
     });
   })(req, res, next);

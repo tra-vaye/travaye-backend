@@ -1,22 +1,50 @@
 import bcrypt from "bcryptjs";
+import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import session from "express-session";
+import helmet from "helmet";
 import mongoose from "mongoose";
+import morgan from "morgan";
+import multer from "multer";
 import passport from "passport";
 import passportLocal from "passport-local";
+import path from "path";
+import { fileURLToPath } from "url";
+import { createLocation } from "./controllers/location.controllers.js";
 import { Business } from "./models/Business.model.js";
 import { User } from "./models/User.model.js";
 import businessRouter from "./routes/business.routes.js";
 import userRouter from "./routes/user.routes.js";
 const LocalStrategy = passportLocal.Strategy;
 
-//Middlewares
-const app = express();
+/* CONFIGURATIONS */
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 dotenv.config();
+const app = express();
 app.use(express.json());
+app.use(helmet());
+app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
+app.use(morgan("common"));
+app.use(bodyParser.json({ limit: "30mb", extended: true }));
+app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
+app.use(cors());
+app.use("/assets", express.static(path.join(__dirname, "public/assets")));
+
+/* FILE STORAGE */
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "public/assets");
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
+const upload = multer({ storage });
+
 var whitelist = [
   "http://localhost:3000",
   "http://www.localhost:3000",
@@ -34,7 +62,6 @@ var corsOptions = {
     }
   },
 };
-
 app.use(cors(corsOptions));
 app.use(
   session({
@@ -46,16 +73,11 @@ app.use(
 app.use(cookieParser());
 app.use(passport.initialize());
 app.use(passport.session());
-
 function SessionConstructor(userId, userGroup, details) {
   this.userId = userId;
   this.userGroup = userGroup;
   this.details = details;
 }
-// Serialisation for Local Usersf
-// passport.use(User.createStrategy());
-// passport.use(Business.createStrategy());
-
 passport.use(
   "userLocal",
   new LocalStrategy({ usernameField: "username" }, User.authenticate())
@@ -110,35 +132,14 @@ passport.deserializeUser(function (sessionContructor, done) {
     });
   }
 });
-// const localStrategy2 = new LocalStrategy(
-//   {
-//     usernameField: "email",
-//     passwordField: "password",
-//     session: false,
-//   },
-//   function (email, password, done) {
-//     // find user by email and password using Model2
-//     Business.findOne(
-//       { email: email, password: password },
-//       function (err, user) {
-//         if (err) {
-//           return done(err);
-//         }
-//         if (!user) {
-//           return done(null, false, { message: "Incorrect email or password." });
-//         }
-//         return done(null, user);
-//       }
-//     );
-//   }
-// );
 
-// Route Middlewares
+// ROUTES WITH FILES
+app.post("/location", upload.single("picture"), createLocation);
+
+// ROUTES
 app.use("/api/user", userRouter);
 app.use("/api/business", businessRouter);
 
-// Send a Fake email
-// sendVerifyEmail("adebisiakinade.123@gmail.com", "2314");
 // Server Listener
 async function connectDbAndListen() {
   try {

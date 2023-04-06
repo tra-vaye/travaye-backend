@@ -15,7 +15,6 @@ export const registerUser = async (req, res, next) => {
   // Random Four digit code
   // Generate a random 4-digit code
   let verificationCode = Math.floor(Math.random() * 9000) + 1000;
-  sendVerifyEmail(email, verificationCode);
   User.register(
     {
       username: username,
@@ -32,6 +31,7 @@ export const registerUser = async (req, res, next) => {
           error: "A User with the given username or email exists",
         });
       } else if (!err) {
+        sendVerifyEmail(email, verificationCode);
         next();
       }
 
@@ -57,6 +57,7 @@ export const loginUser = (req, res, next) => {
       if (err) {
         return next(err);
       }
+      user.password = undefined;
       return res.status(200).json({ user });
     });
   })(req, res, next);
