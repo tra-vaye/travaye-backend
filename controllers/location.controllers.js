@@ -32,7 +32,7 @@ export const createLocation = async (req, res) => {
           locationContact: 911,
           locationDescription: locationDescription,
           locationRating: 4.5,
-          locationImagePath: picturePath.path,
+          locationImagePath: picturePath,
           locationCategory: "wildlife-attractions",
           locationAddedBy,
         });
