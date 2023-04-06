@@ -18,11 +18,11 @@ const locationSchema = new mongoose.Schema(
     },
     locationContact: {
       type: Number,
-      required: true,
+      // required: true,
     },
     locationRating: {
       type: Number,
-      required: true,
+      // required: true,
     },
     locationDescription: {
       type: String,

@@ -29,9 +29,9 @@ export const createLocation = async (req, res) => {
         const newLocation = new Location({
           locationName: locationName,
           locationAddress: locationAddress,
-          locationContact: 911,
+          locationContact: "",
           locationDescription: locationDescription,
-          locationRating: 4.5,
+          locationRating: "",
           locationImagePath: picturePath,
           locationCategory: "wildlife-attractions",
           locationAddedBy,
