@@ -36,14 +36,24 @@ app.use(cors());
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
 /* FILE STORAGE */
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "public/assets");
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
+
+// Cloudinary
+cloudinary.config({
+  cloud_name: `${process.env.CLOUD_NAME}`,
+  api_key: `${process.env.API_KEY}`,
+  api_secret: `${process.env.API_SECRET}`,
+});
+// Multer storage for Cloudinary
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary.v2,
+  params: {
+    folder: "Assets",
+    format: async (req, file) => "webp", // Set the format of the uploaded image
+    public_id: (req, file) => `${Date.now()}-${file.originalname}`, // Set the public ID for the uploaded image
   },
 });
+
+// Initialize Multer upload middleware
 const upload = multer({ storage });
 
 var whitelist = [
@@ -135,7 +145,7 @@ passport.deserializeUser(function (sessionContructor, done) {
 });
 
 // ROUTES WITH FILES
-app.post("/location", upload.single("picture"), createLocation);
+app.post("/location", upload.array("picture"), createLocation);
 
 // ROUTES
 app.use("/api/user", userRouter);
