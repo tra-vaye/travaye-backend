@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import bodyParser from "body-parser";
+import cloudinary from "cloudinary";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -17,9 +18,10 @@ import { createLocation } from "./controllers/location.controllers.js";
 import { Business } from "./models/Business.model.js";
 import { User } from "./models/User.model.js";
 import businessRouter from "./routes/business.routes.js";
-import userRouter from "./routes/user.routes.js";
 import locationRouter from "./routes/location.routes.js";
+import userRouter from "./routes/user.routes.js";
 const LocalStrategy = passportLocal.Strategy;
+import { CloudinaryStorage } from "multer-storage-cloudinary";
 
 /* CONFIGURATIONS */
 const __filename = fileURLToPath(import.meta.url);
