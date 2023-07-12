@@ -1,0 +1,9 @@
+{
+  "events": {
+    "restart": "clear"
+  },
+  "ignore": ["node_modules", "public", "*.md", "package-lock.json", "nodemon.json"],
+  "delay": 500,
+  "restartable": "rs",
+  "watch": ["*.js", ".env"]
+}
