@@ -1,0 +1,8 @@
+{
+  "events": {
+    "restart": "clear"
+  },
+  "ignore": ["node_modules", "public", "*.md", "package.json", "package-lock.json"],
+  "delay": 500,
+  "restartable": "rs"
+}
