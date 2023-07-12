@@ -2,7 +2,8 @@
   "events": {
     "restart": "clear"
   },
-  "ignore": ["node_modules", "public", "*.md", "package.json", "package-lock.json"],
+  "ignore": ["node_modules", "public", "*.md", "package-lock.json", "nodemon.json"],
   "delay": 500,
-  "restartable": "rs"
+  "restartable": "rs",
+  "watch": ["*.js", ".env"]
 }

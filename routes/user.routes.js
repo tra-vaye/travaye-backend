@@ -1,5 +1,6 @@
 import express from "express";
 import passport from "passport";
+import jwt from 'jsonwebtoken';
 import {
   loginUser,
   registerUser,
@@ -14,15 +15,15 @@ const userRouter = express.Router();
 
 // To add New Users and Get all Existing Users Data
 userRouter.route("/").post(registerUser, (req, res, next) => {
-  passport.authenticate("userLocal", function (err, user, info) {
+  passport.authenticate("jwt", function (err, user, info) {
     if (err) {
       return next(err);
     }
     if (!user) {
       // *** Display message without using flash option
       // re-render the login form with a message
-      res.status(400).json({
-        error: "A User with the given username or email exists",
+      return res.status(400).json({
+        error: info.message ?? "A User with the given username or email exists",
       });
     }
     req.logIn(user, function (err) {
@@ -30,7 +31,11 @@ userRouter.route("/").post(registerUser, (req, res, next) => {
         return next(err);
       }
       user.password = undefined;
-      return res.status(200).json({ user });
+
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        expiresIn: "1d",
+      });
+      return res.status(201).json({ user, token });
     });
   })(req, res, next);
 }); // http://localhost:8080/api/user/

@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import passport from "passport";
 import { User } from "../models/User.model.js";
 import sendVerifyEmail from "../services/index.service.js";
+import jwt from 'jsonwebtoken';
 
 export const registerUser = async (req, res, next) => {
   const username = req.body?.username;
@@ -31,6 +32,10 @@ export const registerUser = async (req, res, next) => {
           error: "A User with the given username or email exists",
         });
       } else if (!err) {
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+          expiresIn: "1d",
+        });
+        req.headers.authorization = `Bearer ${token}`;
         sendVerifyEmail(email, verificationCode);
         next();
       }
@@ -40,27 +45,30 @@ export const registerUser = async (req, res, next) => {
   );
 };
 
-export const loginUser = (req, res, next) => {
-  passport.authenticate("userLocal", function (err, user, info) {
-    console.log(user);
-    if (err) {
-      return next(err);
-    }
-    if (!user) {
-      // *** Display message without using flash option
-      // re-render the login form with a message
-      return res.status(400).json({
-        error: "Invalid username or password",
-      });
-    }
-    req.logIn(user, function (err) {
-      if (err) {
-        return next(err);
-      }
-      user.password = undefined;
-      return res.status(200).json({ user });
+export const loginUser = async (req, res, next) => {
+  const username = req.body.username;
+  const password = req.body.password;
+
+  const user = await User.findOne({ username: username });
+
+  if (!user) {
+    return res.status(400).json({
+      error: "Invalid username or password",
     });
-  })(req, res, next);
+  }
+
+  const check = await bcrypt.compare(password, user.password);
+  if (!check) {
+    return res.status(400).json({
+      error: "Invalid username or password",
+    });
+  }
+
+  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    expiresIn: '1d'
+  });
+
+  return res.status(200).json({token});
 };
 // Logout
 export const logUserOut = (req, res) => {

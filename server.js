@@ -19,6 +19,7 @@ import { User } from './models/User.model.js';
 import businessRouter from './routes/business.routes.js';
 import locationRouter from './routes/location.routes.js';
 import userRouter from './routes/user.routes.js';
+import { JwtPassport } from './config/passport.js';
 
 /* CONFIGURATIONS */
 dotenv.config();
@@ -139,6 +140,8 @@ passport.deserializeUser(function (sessionContructor, done) {
 		});
 	}
 });
+
+JwtPassport(passport);
 
 // ROUTES WITH FILES
 app.post(
