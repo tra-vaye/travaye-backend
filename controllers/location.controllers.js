@@ -1,12 +1,28 @@
+import dotenv from "dotenv";
 import { Location } from "../models/Location.model.js";
+
+// This function works as an organizer for multiple images to avoid images having same name
+dotenv.config();
+
+const saveImagesWithModifiedName = async (files, productName) => {
+  const imageUrls = [];
+  console.log(files);
+  try {
+    files.map((file) => imageUrls.push(file.path));
+  } catch (err) {
+    console.error(err);
+    throw new Error(`Error uploading images: ${err.message}`);
+  }
+  return imageUrls;
+};
 
 export const createLocation = async (req, res) => {
   const {
     locationName,
     locationAddress,
-    locationRating,
-    locationContact,
-    picturePath,
+    // locationRating,
+    // locationContact,
+    // picturePath,
     locationDescription,
     locationAddedBy,
   } = await req.body;
@@ -21,6 +37,13 @@ export const createLocation = async (req, res) => {
     }
   });
   try {
+    const files = req.files;
+
+    if (!files || files.length === 0) {
+      throw new Error("No files uploaded!");
+    }
+    const images = req.files;
+    console.log(images);
     if (existingLocation) {
       console.log(existingLocation);
       return res.status(400).json({ message: "Location already exist." });
@@ -32,7 +55,10 @@ export const createLocation = async (req, res) => {
           locationContact: "",
           locationDescription: locationDescription,
           locationRating: "",
-          locationImagePath: picturePath,
+          locationImagePath: await saveImagesWithModifiedName(
+            images,
+            locationName.replace(/\s/g, "-")
+          ),
           locationCategory: "wildlife-attractions",
           locationAddedBy,
         });

@@ -10,10 +10,9 @@ import helmet from "helmet";
 import mongoose from "mongoose";
 import morgan from "morgan";
 import multer from "multer";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
 import passport from "passport";
 import passportLocal from "passport-local";
-import path from "path";
-import { fileURLToPath } from "url";
 import { createLocation } from "./controllers/location.controllers.js";
 import { Business } from "./models/Business.model.js";
 import { User } from "./models/User.model.js";
@@ -21,11 +20,8 @@ import businessRouter from "./routes/business.routes.js";
 import locationRouter from "./routes/location.routes.js";
 import userRouter from "./routes/user.routes.js";
 const LocalStrategy = passportLocal.Strategy;
-import { CloudinaryStorage } from "multer-storage-cloudinary";
 
 /* CONFIGURATIONS */
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 dotenv.config();
 const app = express();
 app.use(express.json());
@@ -35,7 +31,6 @@ app.use(morgan("common"));
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
-app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
 /* FILE STORAGE */
 
@@ -147,7 +142,18 @@ passport.deserializeUser(function (sessionContructor, done) {
 });
 
 // ROUTES WITH FILES
-app.post("/location", upload.array("picture"), createLocation);
+app.post(
+  "/api/location",
+  // (req, res, next) => {
+  //   if (req.isAuthenticated()) {
+  //     next();
+  //   } else {
+  //     res.status(403).json({ error: "Sorry you're not allowed in this Zone." });
+  //   }
+  // },
+  upload.array("pictures"),
+  createLocation
+);
 
 // ROUTES
 app.use("/api/user", userRouter);

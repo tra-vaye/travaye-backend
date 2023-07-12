@@ -29,8 +29,8 @@ const locationSchema = new mongoose.Schema(
       required: true,
     },
     locationImagePath: {
-      type: String,
-      default: "",
+      type: Array,
+      default: [],
     },
     locationCategory: {
       type: String,
