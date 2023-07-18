@@ -17,6 +17,10 @@ const locationRouter = express.Router();
 locationRouter
   .route("/")
   .get(getAllLocations)
-  .post(passport.authenticate("business", { session: false }), upload.array('pictures'), createLocation); // http://localhost:8080/api/location/
+  .post(
+    passport.authenticate(["business", "jwt"], { session: false }),
+    upload.array("pictures"),
+    createLocation
+  ); // http://localhost:8080/api/location/
 
 export default locationRouter;
