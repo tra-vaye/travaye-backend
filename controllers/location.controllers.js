@@ -6,7 +6,7 @@ dotenv.config();
 
 const saveImagesWithModifiedName = async (files, productName) => {
   const imageUrls = [];
-  console.log(files);
+  // console.log(files);
   try {
     files.map((file) => imageUrls.push(file.path));
   } catch (err) {
@@ -18,24 +18,26 @@ const saveImagesWithModifiedName = async (files, productName) => {
 
 export const createLocation = async (req, res) => {
   const {
-    locationName,
-    locationAddress,
+    name: locationName,
+    address: locationAddress,
     // locationRating,
     // locationContact,
     // picturePath,
-    locationDescription,
-    locationAddedBy,
-  } = await req.body;
-  console.log(req.body);
+    description: locationDescription,
+    addeddBy: locationAddedBy,
+  } = req.body;
+
   const existingLocation = await Location.findOne({
     locationName: locationName,
   }).then((err, location) => {
     if (err) {
+      console.error(err.message);
       return err;
     } else if (location) {
       return location;
     }
   });
+
   try {
     const files = req.files;
 
@@ -43,7 +45,7 @@ export const createLocation = async (req, res) => {
       throw new Error("No files uploaded!");
     }
     const images = req.files;
-    console.log(images);
+
     if (existingLocation) {
       console.log(existingLocation);
       return res.status(400).json({ message: "Location already exist." });
@@ -63,14 +65,15 @@ export const createLocation = async (req, res) => {
           locationAddedBy,
         });
         const savedLocation = await newLocation.save();
-        res.status(200).json(savedLocation);
+        return res.status(200).json(savedLocation);
       }
     }
   } catch (error) {
     console.log(error.message);
-    res.status(400).json({ error: "Failed to add location" });
+    return res.status(400).json({ error: "Failed to add location" });
   }
 };
+
 export const getAllLocations = async (req, res) => {
   try {
     const locations = await Location.find({});

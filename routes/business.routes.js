@@ -1,5 +1,7 @@
 import express from "express";
 import passport from "passport";
+import jwt from "jsonwebtoken";
+
 import {
   currentUser,
   loginBusiness,
@@ -13,7 +15,7 @@ businessRouter
   .route("/")
   .get(currentUser)
   .post(registerBusiness, (req, res, next) => {
-    passport.authenticate("businessLocal", function (err, user, info) {
+    passport.authenticate("business", function (err, user, info) {
       if (err) {
         return next(err);
       }
@@ -28,7 +30,11 @@ businessRouter
         if (err) {
           return next(err);
         }
-        return res.status(200).json({ user });
+
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+          expiresIn: "1d",
+        });
+        return res.status(200).json({ business: user, token });
       });
     })(req, res, next);
   }); // http://localhost:8080/api/business/
