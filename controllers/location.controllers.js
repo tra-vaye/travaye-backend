@@ -75,9 +75,26 @@ export const createLocation = async (req, res) => {
 };
 
 export const getAllLocations = async (req, res) => {
+  let { page, count } = req.query;
+
+  page = parseInt(page) || 1;
+  count = parseInt(count) || 10;
+
   try {
-    const locations = await Location.find({});
-    return res.status(200).json({ locations });
+    const locations = await Location.find()
+      .limit(count)
+      .skip((page - 1) * count);
+
+    const meta = {
+      prev: page > 1 ? page - 1 : null,
+      next: locations.length < count ? null : page + 1,
+      from: (page - 1) * count + 1,
+      to: (page - 1) * count + locations.length,
+      page,
+      count,
+      total: await Location.countDocuments(),
+    };
+    return res.status(200).json({ data: locations, meta });
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }
