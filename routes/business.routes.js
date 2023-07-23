@@ -26,16 +26,11 @@ businessRouter
           error: "No Business Found",
         });
       }
-      req.logIn(user, function (err) {
-        if (err) {
-          return next(err);
-        }
 
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-          expiresIn: "1d",
-        });
-        return res.status(200).json({ business: user, token });
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        expiresIn: "1d",
       });
+      return res.status(200).json({ business: user, token });
     })(req, res, next);
   }); // http://localhost:8080/api/business/
 businessRouter.route("/login").post(loginBusiness);
