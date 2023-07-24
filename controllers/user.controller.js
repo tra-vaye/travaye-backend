@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import passport from "passport";
 import { User } from "../models/User.model.js";
 import sendVerifyEmail from "../services/index.service.js";
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 
 export const registerUser = async (req, res, next) => {
   const username = req.body?.username;
@@ -65,10 +65,10 @@ export const loginUser = async (req, res, next) => {
   }
 
   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-    expiresIn: '1d'
+    expiresIn: "1d",
   });
 
-  return res.status(200).json({token});
+  return res.status(200).json({ token });
 };
 // Logout
 export const logUserOut = (req, res) => {
@@ -92,4 +92,11 @@ export const verifyUser = async (req, res) => {
   user.verified = true;
   await user.save();
   res.status(200).json({ user });
+};
+
+export const getUser = async (req, res) => {
+  const user = req.user;
+  user.password = undefined;
+  user.verificationCode = undefined;
+  return res.status(200).json({ user });
 };
