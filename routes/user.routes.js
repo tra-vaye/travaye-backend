@@ -5,6 +5,7 @@ import {
   loginUser,
   registerUser,
   verifyUser,
+  getUser,
 } from "../controllers/user.controller.js";
 
 // Created an express routing instance
@@ -14,7 +15,9 @@ const userRouter = express.Router();
 // You can read more about it in Express Docs
 
 // To add New Users and Get all Existing Users Data
-userRouter.route("/").post(registerUser, (req, res, next) => {
+userRouter.route("/")
+.get(passport.authenticate('jwt', {session: false}), getUser)
+.post(registerUser, (req, res, next) => {
   passport.authenticate("jwt", { session: false }, function (err, user, info) {
     if (err) {
       return next(err);
