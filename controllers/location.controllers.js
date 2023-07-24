@@ -4,7 +4,7 @@ import { Location } from "../models/Location.model.js";
 // This function works as an organizer for multiple images to avoid images having same name
 dotenv.config();
 
-const saveImagesWithModifiedName = async (files, productName) => {
+const saveImagesWithModifiedName = async (files) => {
   const imageUrls = [];
   // console.log(files);
   try {
@@ -57,10 +57,7 @@ export const createLocation = async (req, res) => {
           locationContact: locationContact,
           locationDescription: locationDescription,
           locationRating: locationRating,
-          locationImagePath: await saveImagesWithModifiedName(
-            images,
-            locationName.replace(/\s/g, "-")
-          ),
+          locationImagePath: await saveImagesWithModifiedName(images),
           locationCategory: locationCategory,
           locationAddedBy: locationAddedBy,
         });
@@ -104,9 +101,11 @@ export const getAllLocations = async (req, res) => {
 
   try {
     const query = {};
+
     // Using split() method allows to send multiple filters and location in one  query parameter
     // The Frontend guys should join() the array with "," to make it a comma seperated string
     // Using regex for case insensitve (whether capitalized or not returns a match if the string of the filter entails same characters)
+
     if (filters) {
       query.locationCategory = {
         $in: filters
