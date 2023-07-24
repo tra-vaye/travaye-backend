@@ -32,6 +32,8 @@ var whitelist = [
   "http://www.172.20.10.9:3000",
   "https://travaye-beta.netlify.app",
   "https://www.travaye-beta.netlify.app",
+  "https://travaye-frontend.vercel.app",
+  "https://www.travaye-frontend.vercel.app",
 ];
 var corsOptions = {
   origin:
