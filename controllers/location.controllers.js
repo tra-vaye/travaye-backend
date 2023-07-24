@@ -20,11 +20,11 @@ export const createLocation = async (req, res) => {
   const {
     name: locationName,
     address: locationAddress,
-    // locationRating,
-    // locationContact,
-    // picturePath,
+    rating: locationRating,
+    contact: locationContact,
     description: locationDescription,
-    addeddBy: locationAddedBy,
+    category: locationCategory,
+    addedBy: locationAddedBy,
   } = req.body;
 
   const existingLocation = await Location.findOne({
@@ -54,15 +54,15 @@ export const createLocation = async (req, res) => {
         const newLocation = new Location({
           locationName: locationName,
           locationAddress: locationAddress,
-          locationContact: "",
+          locationContact: locationContact,
           locationDescription: locationDescription,
-          locationRating: "",
+          locationRating: locationRating,
           locationImagePath: await saveImagesWithModifiedName(
             images,
             locationName.replace(/\s/g, "-")
           ),
-          locationCategory: "wildlife-attractions",
-          locationAddedBy,
+          locationCategory: locationCategory,
+          locationAddedBy: locationAddedBy,
         });
         const savedLocation = await newLocation.save();
         return res.status(200).json(savedLocation);
@@ -74,26 +74,68 @@ export const createLocation = async (req, res) => {
   }
 };
 
-export const getAllLocations = async (req, res) => {
-  let { page, count } = req.query;
+// export const getAllLocations = async (req, res) => {
+//   let { page, count } = req.query;
 
-  page = parseInt(page) || 1;
-  count = parseInt(count) || 10;
+//   page = parseInt(page) || 1;
+//   count = parseInt(count) || 10;
+
+//   try {
+//     const locations = await Location.find()
+//       .limit(count)
+//       .skip((page - 1) * count);
+
+//     const meta = {
+//       prev: page > 1 ? page - 1 : null,
+//       next: locations.length < count ? null : page + 1,
+//       from: (page - 1) * count + 1,
+//       to: (page - 1) * count + locations.length,
+//       page,
+//       count,
+//       total: await Location.countDocuments(),
+//     };
+//     return res.status(200).json({ data: locations, meta });
+//   } catch (error) {
+//     return res.status(400).json({ error: error.message });
+//   }
+// };
+export const getAllLocations = async (req, res) => {
+  const { page = 1, count = 10, filters = [], location } = req.query;
 
   try {
-    const locations = await Location.find()
-      .limit(count)
-      .skip((page - 1) * count);
+    const query = {};
+    // Using split() method allows to send multiple filters and location in one  query parameter
+    // The Frontend guys should join() the array with "," to make it a comma seperated string
+    // Using regex for case insensitve (whether capitalized or not returns a match if the string of the filter entails same characters)
+    if (filters.length > 0) {
+      query.locationCategory = {
+        $in: filters
+          .split(",")
+          .map((category) => new RegExp(category.trim(), "i")),
+      };
+    }
+
+    if (location) {
+      query.locationCity = {
+        $in: location.split(",").map((loc) => new RegExp(loc.trim(), "i")),
+      };
+    }
+
+    const totalLocations = await Location.countDocuments(query);
+    const locations = await Location.find(query)
+      .limit(Number(count))
+      .skip((Number(page) - 1) * Number(count));
 
     const meta = {
       prev: page > 1 ? page - 1 : null,
-      next: locations.length < count ? null : page + 1,
-      from: (page - 1) * count + 1,
-      to: (page - 1) * count + locations.length,
-      page,
-      count,
-      total: await Location.countDocuments(),
+      next: locations.length < count ? null : Number(page) + 1,
+      from: (Number(page) - 1) * Number(count) + 1,
+      to: (Number(page) - 1) * Number(count) + locations.length,
+      page: Number(page),
+      count: Number(count),
+      total: totalLocations,
     };
+
     return res.status(200).json({ data: locations, meta });
   } catch (error) {
     return res.status(400).json({ error: error.message });

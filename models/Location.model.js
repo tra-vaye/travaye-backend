@@ -16,6 +16,10 @@ const locationSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    locationCity: {
+      type: String,
+      required: true,
+    },
     locationContact: {
       type: Number,
       // required: true,
