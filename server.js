@@ -55,7 +55,7 @@ app.use(
 );
 app.use(cookieParser());
 app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.session());
 function SessionConstructor(userId, userGroup, details) {
   this.userId = userId;
   this.userGroup = userGroup;
