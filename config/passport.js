@@ -12,7 +12,6 @@ export function JwtPassport(passport) {
   passport.use(
     new JWTStrategy(options, async function (payload, done) {
       try {
-		console.log(payload);
         const user = await User.findById(payload.id);
         if (!user) {
           return done(null, false, { message: "Unauthorized." });
