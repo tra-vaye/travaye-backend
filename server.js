@@ -156,11 +156,11 @@ async function connectDbAndListen() {
       useUnifiedTopology: true,
     });
     console.log(`Database connected on ${host}:${port}`);
-    app.listen(process.env.PORT, () => {
-      console.log(`Listening on http://localhost:${process.env.PORT}`);
-    });
   } catch (error) {
     console.log(error.message);
   }
+  app.listen(process.env.PORT, () => {
+    console.log(`Listening on http://localhost:${process.env.PORT}`);
+  });
 }
 await connectDbAndListen();

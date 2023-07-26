@@ -2,6 +2,7 @@ import express from "express";
 import {
   createLocation,
   getAllLocations,
+  getLocationById,
 } from "../controllers/location.controllers.js";
 // import multer
 import { upload } from "../config/multer.js";
@@ -23,4 +24,5 @@ locationRouter
     createLocation
   ); // http://localhost:8080/api/location/
 
+  locationRouter.get('/:id', passport.authenticate(['business', 'jwt'], { session: false }), getLocationById);
 export default locationRouter;
