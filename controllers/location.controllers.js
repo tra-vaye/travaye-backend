@@ -24,6 +24,7 @@ export const createLocation = async (req, res) => {
     contact: locationContact,
     description: locationDescription,
     category: locationCategory,
+    city: locationCity,
     addedBy: locationAddedBy,
   } = req.body;
 
@@ -60,6 +61,7 @@ export const createLocation = async (req, res) => {
           locationImagePath: await saveImagesWithModifiedName(images),
           locationCategory: locationCategory,
           locationAddedBy: locationAddedBy,
+          locationCity,
         });
         const savedLocation = await newLocation.save();
         return res.status(200).json(savedLocation);
@@ -148,5 +150,48 @@ export const getLocationById = async (req, res) => {
     return res.status(200).json(location);
   } catch (error) {
     return res.status(400).json({ error: error.message });
+  }
+};
+
+export const planTrip = async (req, res) => {
+  const { city, state, lga, category, budget, page = 1, count = 10 } = req.query;
+
+  try {
+    // let { city, state, lga } = address ? address : {};
+
+    let query = Location.find();
+
+    if (city) {
+      query.where("locationCity").equals(city);
+    }
+
+    if (state) {
+      query.where("locationAddress").regex(new RegExp(`${state}`, "i"));
+    }
+
+    if (lga) {
+      query.where("locationAddress").regex(new RegExp(`${lga}`, "i"));
+    }
+
+    if (category) {
+      query.where("locationCategory").in(category);
+    }
+
+    const locations = await query.skip((page - 1) * count).limit(count).exec();
+
+    const meta = {
+      prev: page > 1 ? page - 1 : null,
+      next: locations.length < count ? null : page + 1,
+      from: (page - 1) * count + 1,
+      to: (page - 1) * count + locations.length,
+      page,
+      count,
+      total: await Location.countDocuments(),
+    };
+
+    return res.status(200).json({ data: locations, meta });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ error: err.message });
   }
 };
