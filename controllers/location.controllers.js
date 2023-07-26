@@ -140,3 +140,14 @@ export const getAllLocations = async (req, res) => {
     return res.status(400).json({ error: error.message });
   }
 };
+
+export const getLocationById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const location = await Location.findById(id);
+    return res.status(200).json(location);
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+};
