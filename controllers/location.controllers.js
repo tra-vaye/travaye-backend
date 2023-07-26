@@ -98,7 +98,6 @@ export const createLocation = async (req, res) => {
 // };
 export const getAllLocations = async (req, res) => {
   const { page = 1, count = 10, filters, location } = req.query;
-
   try {
     const query = {};
 
@@ -106,7 +105,7 @@ export const getAllLocations = async (req, res) => {
     // The Frontend guys should join() the array with "," to make it a comma seperated string
     // Using regex for case insensitve (whether capitalized or not returns a match if the string of the filter entails same characters)
 
-    if (filters) {
+    if (filters && filters.toLowerCase() !== "all") {
       query.locationCategory = {
         $in: filters
           .split(",")
