@@ -18,14 +18,15 @@ const saveImagesWithModifiedName = async (files) => {
 
 export const createLocation = async (req, res) => {
   const {
-    name: locationName,
-    address: locationAddress,
-    rating: locationRating,
-    contact: locationContact,
-    description: locationDescription,
-    category: locationCategory,
-    city: locationCity,
-    addedBy: locationAddedBy,
+    locationName,
+    locationAddress,
+    locationRating,
+    locationContact,
+    locationDescription,
+    locationCategory,
+    locationCity,
+    locationAddedBy,
+    locationSubCategory,
   } = req.body;
 
   const existingLocation = await Location.findOne({
@@ -59,7 +60,10 @@ export const createLocation = async (req, res) => {
           locationDescription: locationDescription,
           locationRating: locationRating,
           locationImagePath: await saveImagesWithModifiedName(images),
-          locationCategory: locationCategory,
+          locationCategory: locationCategory.toLowerCase().replace(/\s+/g, "-"),
+          locationSubCategory: locationSubCategory
+            .toLowerCase()
+            .replace(/\s+/g, "-"),
           locationAddedBy: locationAddedBy,
           locationCity,
         });
@@ -154,7 +158,15 @@ export const getLocationById = async (req, res) => {
 };
 
 export const planTrip = async (req, res) => {
-  const { city, state, lga, category, budget, page = 1, count = 10 } = req.query;
+  const {
+    city,
+    state,
+    lga,
+    category,
+    budget,
+    page = 1,
+    count = 10,
+  } = req.query;
 
   try {
     // let { city, state, lga } = address ? address : {};
@@ -177,7 +189,10 @@ export const planTrip = async (req, res) => {
       query.where("locationCategory").in(category);
     }
 
-    const locations = await query.skip((page - 1) * count).limit(count).exec();
+    const locations = await query
+      .skip((page - 1) * count)
+      .limit(count)
+      .exec();
 
     const meta = {
       prev: page > 1 ? page - 1 : null,
