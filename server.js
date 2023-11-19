@@ -142,27 +142,28 @@ app.get('/api/categories', passport.authenticate('jwt', {session: false}), (req,
   return res.json([
     {
       name: 'Entertainment Venues',
-      slug: 'entertainment-venues'
+      sub: [
+        {name: 'Cinema', slug: 'cinema'},
+      ],
     },
     {
       name: 'Special Events',
-      slug: 'special-events'
+      sub: [
+        {name: 'Festivals', slug: 'festivals'},
+        {name: 'parades', slug: 'parades'},
+      ],
     },
     {
       name: 'Wildlife Attractions',
-      slug: 'wildlife-attractions'
     },
     {
       name: 'History & Arts',
-      slug: 'history-and-arts'
     },
     {
       name: 'Food & Drinks',
-      slug: 'food-and-drinks'
     },
     {
       name: 'Sports & Recreation Centres',
-      slug: 'sports-and-recreation',
     }
   ]);
 });
