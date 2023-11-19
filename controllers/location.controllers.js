@@ -218,9 +218,7 @@ export const addLocationtoLikedLocations = async (req, res) => {
 
     // Check if the location is already in the liked locations list
     if (user.likedLocations.includes(locationName)) {
-      return res
-        .status(400)
-        .json({ error: "Location is already liked by the user." });
+      return res.status(400).json({ error: "Location is already liked" });
     }
 
     // Add the location to the liked locations list
