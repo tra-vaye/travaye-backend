@@ -13,6 +13,7 @@ import businessRouter from "./routes/business.routes.js";
 import locationRouter from "./routes/location.routes.js";
 import userRouter from "./routes/user.routes.js";
 import { JwtPassport } from "./config/passport.js";
+import { ensureIsAuthenticated } from "./middleware/auth.js";
 
 /* CONFIGURATIONS */
 dotenv.config();
@@ -138,6 +139,34 @@ JwtPassport(passport);
 app.use("/api/user", userRouter);
 app.use("/api/business", businessRouter);
 app.use("/api/location", locationRouter);
+app.get('/api/categories', ensureIsAuthenticated, (req, res) => {
+  return res.json([
+    {
+      name: 'Entertainment Venues',
+      slug: 'entertainment-venues'
+    },
+    {
+      name: 'Special Events',
+      slug: 'special-events'
+    },
+    {
+      name: 'Wildlife Attractions',
+      slug: 'wildlife-attractions'
+    },
+    {
+      name: 'History & Arts',
+      slug: 'history-and-arts'
+    },
+    {
+      name: 'Food & Drinks',
+      slug: 'food-and-drinks'
+    },
+    {
+      name: 'Sports & Recreation Centres',
+      slug: 'sports-and-recreation',
+    }
+  ]);
+});
 
 app.use((err, req, res, next) => {
   if (err) {
