@@ -23,7 +23,7 @@ export const registerBusiness = async (req, res, next) => {
   let verificationCode = Math.floor(Math.random() * 9000) + 1000;
 
   // Display the verificationCode
-  console.log(verificationCode);
+  // console.log(verificationCode);
   Business.register(
     {
       businessName: businessName,
