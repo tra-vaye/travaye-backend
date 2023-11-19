@@ -1,13 +1,14 @@
 import express from "express";
 import {
+  addLocationtoLikedLocations,
   createLocation,
   getAllLocations,
   getLocationById,
   planTrip,
 } from "../controllers/location.controllers.js";
 // import multer
-import { upload } from "../config/multer.js";
 import passport from "passport";
+import { upload } from "../config/multer.js";
 
 // Created an express routing instance
 const locationRouter = express.Router();
@@ -34,6 +35,11 @@ locationRouter.get(
   "/:id",
   passport.authenticate(["business", "jwt"], { session: false }),
   getLocationById
+);
+locationRouter.post(
+  "/like",
+  passport.authenticate(["business", "jwt"], { session: false }),
+  addLocationtoLikedLocations
 );
 
 export default locationRouter;
