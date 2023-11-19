@@ -2,7 +2,7 @@ name: Sync Fork with Upstream
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # Run every day
+    - cron: '*/5 * * * *'  # Run every 5 mins
 
 jobs:
   sync:
