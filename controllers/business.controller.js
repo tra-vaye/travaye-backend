@@ -44,7 +44,7 @@ export const registerBusiness = async (req, res, next) => {
           expiresIn: "1d",
         });
         req.headers.authorization = `Bearer ${token}`;
-        // sendVerifyEmail(businessEmail, verificationCode);
+        sendVerifyEmail(businessEmail, verificationCode);
         next();
       }
 

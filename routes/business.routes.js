@@ -13,7 +13,7 @@ const businessRouter = express.Router();
 // To add New Business and current logged in Business Data
 businessRouter
   .route("/")
-  .get(currentUser)
+  .get(passport.authenticate("business", { session: false }), currentUser)
   .post(registerBusiness, (req, res, next) => {
     passport.authenticate("business", function (err, user, info) {
       if (err) {
