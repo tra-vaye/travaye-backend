@@ -178,7 +178,7 @@ export const planTrip = async (req, res) => {
 		}
 
 		if (state) {
-			query.or([{ locationAddress: { $regex: new RegExp(state, 'i') } }]);
+			query.or([{ locationCity: { $regex: new RegExp(state, 'i') } }]);
 		}
 
 		if (lga) {
