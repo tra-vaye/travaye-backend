@@ -18,7 +18,7 @@ jobs:
           git fetch upstream
 
       - name: Merge upstream changes
-        run: git merge upstream/main  # replace 'master' with your branch name
+        run: git merge upstream/main 
 
       - name: Push changes to fork
-        run: git push origin main  # replace 'master' with your branch name
+        run: git push origin main  
