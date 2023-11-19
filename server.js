@@ -142,11 +142,18 @@ app.get('/api/categories', passport.authenticate('jwt', {session: false}), (req,
   return res.json([
     {
       name: 'Entertainment Venues',
-      slug: 'entertainment-venues'
+      slug: 'entertainment-venues',
+      sub: [
+        {name: 'Cinema', slug: 'cinema'},
+      ],
     },
     {
       name: 'Special Events',
-      slug: 'special-events'
+      slug: 'special-events',
+      sub: [
+        {name: 'Festivals', slug: 'festivals'},
+        {name: 'parades', slug: 'parades'},
+      ],
     },
     {
       name: 'Wildlife Attractions',
