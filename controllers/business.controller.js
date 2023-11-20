@@ -1,5 +1,4 @@
 import bcrypt from "bcryptjs";
-import passport from "passport";
 import { Business } from "../models/Business.model.js";
 
 import jwt from "jsonwebtoken";
@@ -101,9 +100,10 @@ export const loginBusiness = async (req, res, next) => {
 };
 
 export const currentUser = (req, res) => {
-  if (req.isAuthenticated()) {
-    return req.user;
-  }
+  const user = req.user;
+  user.password = undefined;
+  user.verificationCode = undefined;
+  return res.status(200).json({ user });
 };
 // Logout
 export const logBusinessOut = (req, res) => {
