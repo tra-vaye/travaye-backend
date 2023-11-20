@@ -73,7 +73,9 @@ export const createLocation = async (req, res) => {
     }
   } catch (error) {
     console.log(error.message);
-    return res.status(400).json({ error: "Failed to add location", message: error });
+    return res
+      .status(400)
+      .json({ error: "Failed to add location", message: error });
   }
 };
 
