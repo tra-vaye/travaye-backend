@@ -6,6 +6,7 @@ import {
   currentUser,
   loginBusiness,
   registerBusiness,
+  verifyBusiness,
 } from "../controllers/business.controller.js";
 
 const businessRouter = express.Router();
@@ -34,4 +35,9 @@ businessRouter
     })(req, res, next);
   }); // http://localhost:8080/api/business/
 businessRouter.route("/login").post(loginBusiness);
+
+businessRouter
+  .route("/verify")
+  .post(passport.authenticate("business", { session: false }), verifyBusiness);
+
 export default businessRouter;

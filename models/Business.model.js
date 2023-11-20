@@ -31,7 +31,7 @@ const businessSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    verified: {
+    emailVerified: {
       type: Boolean,
       default: false,
     },

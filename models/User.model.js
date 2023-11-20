@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema(
     verificationCode: {
       type: Number,
     },
-    verified: {
+    emailVerified: {
       type: Boolean,
       default: false,
     },

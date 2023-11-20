@@ -33,7 +33,7 @@ export function JwtPassport(passport) {
           return done(null, false, { message: "Unauthorized." });
         }
 
-        business.password = undefined;
+        // business.password = undefined;
 
         return done(null, business);
       } catch (err) {

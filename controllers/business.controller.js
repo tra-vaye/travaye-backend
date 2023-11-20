@@ -92,10 +92,11 @@ export const loginBusiness = async (req, res, next) => {
   const token = jwt.sign({ id: business._id }, process.env.JWT_SECRET, {
     expiresIn: "1d",
   });
-
+  business.password = undefined;
+  business.verificationCode = undefined;
   return res.status(200).json({
     token,
-    business,
+    user: business,
   });
 };
 
@@ -109,4 +110,21 @@ export const currentUser = (req, res) => {
 export const logBusinessOut = (req, res) => {
   req.logOut();
   res.redirect("/login");
+};
+export const verifyBusiness = async (req, res) => {
+  const verificationCode = req.body?.code;
+
+  const user = req.user;
+  const isMatch = +verificationCode === user.verificationCode;
+  if (!isMatch) {
+    return res.status(400).json({ error: "Invalid Code" });
+  }
+  // const verifiedUser = await User.findByIdAndUpdate(
+  //   { _id: _id },
+  //   { verified: true },
+  //   { new: true }
+  // );
+  user.emailVerified = true;
+  await user.save();
+  res.status(200).json({ user });
 };

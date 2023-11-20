@@ -67,8 +67,9 @@ export const loginUser = async (req, res, next) => {
   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
     expiresIn: "1d",
   });
-
-  return res.status(200).json({ token });
+  user.password = undefined;
+  user.verificationCode = undefined;
+  return res.status(200).json({ token, user });
 };
 // Logout
 export const logUserOut = (req, res) => {
@@ -77,7 +78,7 @@ export const logUserOut = (req, res) => {
 };
 // Verify
 export const verifyUser = async (req, res) => {
-  const verificationCode = req.body?.verificationCode;
+  const verificationCode = req.body?.code;
 
   const user = req.user;
   const isMatch = +verificationCode === user.verificationCode;
@@ -89,7 +90,7 @@ export const verifyUser = async (req, res) => {
   //   { verified: true },
   //   { new: true }
   // );
-  user.verified = true;
+  user.emailVerified = true;
   await user.save();
   res.status(200).json({ user });
 };
