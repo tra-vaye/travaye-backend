@@ -3,6 +3,17 @@ import { Business } from "../models/Business.model.js";
 
 import jwt from "jsonwebtoken";
 import sendVerifyEmail from "../services/index.service.js";
+const saveImagesWithModifiedName = async (files) => {
+  const imageUrls = [];
+  // console.log(files);
+  try {
+    files.map((file) => imageUrls.push(file.path));
+  } catch (err) {
+    console.error(err);
+    throw new Error(`Error uploading images: ${err.message}`);
+  }
+  return imageUrls;
+};
 
 /**
  *
@@ -128,4 +139,49 @@ export const verifyBusiness = async (req, res) => {
   user.emailVerified = true;
   await user.save();
   res.status(200).json({ user });
+};
+
+export const completeBusinessRegistration = async (req, res) => {
+  try {
+    const {
+      businessName,
+      address,
+      businessCategory,
+      businessEmail,
+      businessTelephone,
+    } = req?.body;
+
+    const businessLocationImages = req.files.businessLocationImages;
+    const cacRegistrationProof = req.files.cacRegistrationProof;
+    const proofOfAddress = req.files.proofOfAddress;
+
+    const business = req.user;
+    console.log(req.user);
+    console.log(businessName);
+    business.businessName = businessName;
+    business.address = address;
+    business.businessCategory = businessCategory
+      .toLowerCase()
+      .replace(/\s+/g, "-");
+    business.businessEmail = businessEmail;
+    business.businessTelephone = businessTelephone;
+    business.businessCacProofImageURL = await saveImagesWithModifiedName(
+      cacRegistrationProof
+    );
+    business.businessProofAddressImageURL = await saveImagesWithModifiedName(
+      proofOfAddress
+    );
+    business.businessLocationImages = await saveImagesWithModifiedName(
+      businessLocationImages
+    );
+    business.businessVerified = "pending";
+
+    const pendingVerification = await business.save();
+    return res.status(200).json({ pendingVerification });
+  } catch (error) {
+    return res.status(400).json({
+      error: "Failed to update business details",
+      message: error.message,
+    });
+  }
 };

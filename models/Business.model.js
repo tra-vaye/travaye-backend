@@ -36,8 +36,8 @@ const businessSchema = new mongoose.Schema(
       default: false,
     },
     businessVerified: {
-      type: Boolean,
-      default: false,
+      type: String,
+      default: "false",
     },
     businessTelephone: {
       type: Number,
@@ -46,10 +46,12 @@ const businessSchema = new mongoose.Schema(
       type: String,
     },
     businessCacProofImageURL: {
-      type: String,
+      type: Array,
+      default: [],
     },
     businessProofAddressImageURL: {
-      type: String,
+      type: Array,
+      default: [],
     },
     businessLocationImages: {
       type: Array,

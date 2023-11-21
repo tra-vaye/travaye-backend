@@ -1,14 +1,15 @@
 import express from "express";
-import passport from "passport";
 import jwt from "jsonwebtoken";
+import passport from "passport";
 
+import { upload } from "../config/multer.js";
 import {
+  completeBusinessRegistration,
   currentUser,
   loginBusiness,
   registerBusiness,
   verifyBusiness,
 } from "../controllers/business.controller.js";
-
 const businessRouter = express.Router();
 
 // To add New Business and current logged in Business Data
@@ -40,4 +41,13 @@ businessRouter
   .route("/verify")
   .post(passport.authenticate("business", { session: false }), verifyBusiness);
 
+businessRouter.route("/complete").post(
+  passport.authenticate("business", { session: false }),
+  upload.fields([
+    { name: "businessLocationImages", maxCount: 40 },
+    { name: "cacRegistrationProof", maxCount: 1 },
+    { name: "proofOfAddress", maxCount: 1 },
+  ]),
+  completeBusinessRegistration
+);
 export default businessRouter;
