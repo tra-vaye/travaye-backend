@@ -165,6 +165,7 @@ export const planTrip = async (req, res) => {
     state,
     lga,
     category,
+    subcategory,
     budget,
     page = 1,
     count = 10,
@@ -188,8 +189,8 @@ export const planTrip = async (req, res) => {
     }
 
     if (category) {
-      query.or([{ locationCategory: category }]);
-    }
+			query.or([{ locationCategory: { $in: [category, subcategory] } }]);
+		}
 
     const locations = await query
       .skip((page - 1) * count)
