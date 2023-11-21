@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import { Business } from "../models/Business.model.js";
 
 import jwt from "jsonwebtoken";
+import sendVerifyEmail from "../services/index.service.js";
 
 /**
  *

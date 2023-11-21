@@ -39,6 +39,22 @@ const businessSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    businessTelephone: {
+      type: Number,
+    },
+    businessCategory: {
+      type: String,
+    },
+    businessCacProofImageURL: {
+      type: String,
+    },
+    businessProofAddressImageURL: {
+      type: String,
+    },
+    businessLocationImages: {
+      type: Array,
+      default: [],
+    },
   },
   {
     timestamps: true,
