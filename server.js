@@ -138,35 +138,37 @@ JwtPassport(passport);
 app.use("/api/user", userRouter);
 app.use("/api/business", businessRouter);
 app.use("/api/location", locationRouter);
-app.get('/api/categories', passport.authenticate('jwt', {session: false}), (req, res) => {
-  return res.json([
-    {
-      name: 'Entertainment Venues',
-      sub: [
-        {name: 'Cinema', slug: 'cinema'},
-      ],
-    },
-    {
-      name: 'Special Events',
-      sub: [
-        {name: 'Festivals', slug: 'festivals'},
-        {name: 'parades', slug: 'parades'},
-      ],
-    },
-    {
-      name: 'Wildlife Attractions',
-    },
-    {
-      name: 'History & Arts',
-    },
-    {
-      name: 'Food & Drinks',
-    },
-    {
-      name: 'Sports & Recreation Centres',
-    }
-  ]);
-});
+app.get(
+  "/api/categories",
+  passport.authenticate(["business", "jwt"], { session: false }),
+  (req, res) => {
+    return res.json([
+      {
+        name: "Entertainment Venues",
+        sub: [{ name: "Cinema", slug: "cinema" }],
+      },
+      {
+        name: "Special Events",
+        sub: [
+          { name: "Festivals", slug: "festivals" },
+          { name: "parades", slug: "parades" },
+        ],
+      },
+      {
+        name: "Wildlife Attractions",
+      },
+      {
+        name: "History & Arts",
+      },
+      {
+        name: "Food & Drinks",
+      },
+      {
+        name: "Sports & Recreation Centres",
+      },
+    ]);
+  }
+);
 
 app.use((err, req, res, next) => {
   if (err) {
