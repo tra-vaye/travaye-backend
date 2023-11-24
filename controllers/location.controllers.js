@@ -27,6 +27,9 @@ export const createLocation = async (req, res) => {
     locationCity,
     locationAddedBy,
     locationSubCategory,
+    locationLandmark,
+    locationState,
+    locationLGA,
   } = req.body;
 
   const existingLocation = await Location.findOne({
@@ -66,6 +69,9 @@ export const createLocation = async (req, res) => {
             .replace(/\s+/g, "-"),
           locationAddedBy: locationAddedBy,
           locationCity,
+          locationState,
+          locationLandmark,
+          locationLGA,
         });
         const savedLocation = await newLocation.save();
         return res.status(200).json(savedLocation);
@@ -189,8 +195,8 @@ export const planTrip = async (req, res) => {
     }
 
     if (category) {
-			query.or([{ locationCategory: { $in: [category, subcategory] } }]);
-		}
+      query.or([{ locationCategory: { $in: [category, subcategory] } }]);
+    }
 
     const locations = await query
       .skip((page - 1) * count)

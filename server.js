@@ -58,11 +58,11 @@ app.use(
 app.use(cookieParser());
 app.use(passport.initialize());
 // app.use(passport.session());
-function SessionConstructor(userId, userGroup, details) {
-  this.userId = userId;
-  this.userGroup = userGroup;
-  this.details = details;
-}
+// function SessionConstructor(userId, userGroup, details) {
+//   this.userId = userId;
+//   this.userGroup = userGroup;
+//   this.details = details;
+// }
 // passport.use(
 //   "userLocal",
 //   new LocalStrategy({ usernameField: "username" }, User.authenticate())
@@ -145,26 +145,75 @@ app.get(
     return res.json([
       {
         name: "Entertainment Venues",
-        sub: [{ name: "Cinema", slug: "cinema" }],
+        sub: [
+          { name: "Cinema", slug: "cinema" },
+          { name: "Arcade", slug: "arcade" },
+          { name: "Club", slug: "club" },
+        ],
       },
       {
         name: "Special Events",
         sub: [
-          { name: "Festivals", slug: "festivals" },
-          { name: "parades", slug: "parades" },
+          { name: "Festivals & Parades", slug: "festivals-and-parades" },
+          { name: "Party", slug: "party" },
+          { name: "Exhibition", slug: "exhibition" },
         ],
       },
       {
         name: "Wildlife Attractions",
+        sub: [{ name: "Zoo", slug: "zoo" }],
       },
       {
         name: "History & Arts",
+
+        sub: [
+          { name: "Museum & Art Gallery", slug: "museum-and-artGallery" },
+          {
+            name: "Unique Building Attractions",
+            slug: "unique-building-attraction",
+          },
+        ],
       },
       {
         name: "Food & Drinks",
+        sub: [
+          { name: "Restaurants & Cafe", slug: "restaurant-and-cafe" },
+          { name: "Bar & Lounge", slug: "bar-and-lounge" },
+          { name: "Fast Food Spot", slug: "fast-food-spot" },
+        ],
       },
       {
         name: "Sports & Recreation Centres",
+        sub: [
+          {
+            name: "Stadiums",
+            slug: "stadium",
+          },
+          { name: "Sport Events", slug: "sport-event" },
+          { name: "Sport Centers", slug: "sport-center" },
+        ],
+      },
+      {
+        name: "Historial & Heritage Attractions",
+        sub: [
+          {
+            name: "Mountains & Caves & Hills & Islands",
+            slug: "mountain-and-cave-and-hill-island",
+          },
+          { name: "Waterfalls", slug: "waterfall" },
+        ],
+      },
+      {
+        name: "Parks & Relaxation Spots",
+        sub: [
+          {
+            name: "Spa",
+            slug: "spa",
+          },
+          { name: "Beach", slug: "beach" },
+          { name: "National Parks", slug: "national-park" },
+          { name: "Amusement Parks", slug: "amusement-park" },
+        ],
       },
     ]);
   }
