@@ -5,6 +5,7 @@ import {
   getAllLocations,
   getLocationById,
   planTrip,
+  reviewLocation,
 } from "../controllers/location.controllers.js";
 // import multer
 import passport from "passport";
@@ -40,6 +41,12 @@ locationRouter.post(
   "/like",
   passport.authenticate(["business", "jwt"], { session: false }),
   addLocationtoLikedLocations
+);
+locationRouter.post(
+  "/review",
+  passport.authenticate(["business", "jwt"], { session: false }),
+  upload.array("pictures"),
+  reviewLocation
 );
 
 export default locationRouter;

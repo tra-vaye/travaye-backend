@@ -4,7 +4,7 @@
 // Necessary Imports
 import mongoose from "mongoose";
 
-// User Schema Structure
+// Location Schema Structure
 const locationSchema = new mongoose.Schema(
   {
     locationName: {
@@ -17,6 +17,18 @@ const locationSchema = new mongoose.Schema(
       required: true,
     },
     locationCity: {
+      type: String,
+      required: true,
+    },
+    locationState: {
+      type: String,
+      required: true,
+    },
+    locationLGA: {
+      type: String,
+      required: true,
+    },
+    locationLandmark: {
       type: String,
       required: true,
     },
@@ -44,6 +56,10 @@ const locationSchema = new mongoose.Schema(
     },
     locationSubCategory: {
       type: String,
+    },
+    locationArray: {
+      type: Array,
+      default: [],
     },
   },
   {
