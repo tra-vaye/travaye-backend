@@ -57,7 +57,7 @@ const locationSchema = new mongoose.Schema(
     locationSubCategory: {
       type: String,
     },
-    locationArray: {
+    locationReviews: {
       type: Array,
       default: [],
     },

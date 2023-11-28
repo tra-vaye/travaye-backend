@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import { Location } from "../models/Location.model.js";
+import { User } from "../models/User.model.js";
 
 // This function works as an organizer for multiple images to avoid images having same name
 dotenv.config();
@@ -244,6 +245,38 @@ export const addLocationtoLikedLocations = async (req, res) => {
   }
 };
 
-export const reviewLocation = async () => {
-  console.log("hehe");
+export const reviewLocation = async (req, res) => {
+  try {
+    const { locationID, reviewerID, reviewRating, reviewDescription } =
+      req.body;
+    const files = req.files;
+
+    if (!files || files.length === 0) {
+      throw new Error("No files uploaded!");
+    }
+    const images = req.files;
+    const location = await Location.findById(locationID);
+    const reviewer = await User.findById(reviewerID);
+
+    if (!location) {
+      return res.status(404).json({ error: "Location not found" });
+    }
+
+    const newReview = {
+      reviewRating,
+      reviewDescription,
+      reviewerID,
+      reviewerFullname: reviewer?.fullName,
+      reviewImagePaths: await saveImagesWithModifiedName(images),
+    };
+
+    location.locationReviews.push(newReview);
+
+    const updatedLocation = await location.save();
+
+    res.status(201).json(updatedLocation);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 };
