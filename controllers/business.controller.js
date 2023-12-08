@@ -145,10 +145,14 @@ export const completeBusinessRegistration = async (req, res) => {
   try {
     const {
       businessName,
-      address,
+      businessAddress,
       businessCategory,
       businessEmail,
       businessTelephone,
+      businessLGA,
+      businessCity,
+      businessState,
+      businessPriceRange,
     } = req?.body;
 
     const businessLocationImages = req.files.businessLocationImages;
@@ -159,7 +163,7 @@ export const completeBusinessRegistration = async (req, res) => {
     console.log(req.user);
     console.log(businessName);
     business.businessName = businessName;
-    business.address = address;
+    business.businessAddress = businessAddress;
     business.businessCategory = businessCategory
       .toLowerCase()
       .replace(/\s+/g, "-");
@@ -174,6 +178,10 @@ export const completeBusinessRegistration = async (req, res) => {
     business.businessLocationImages = await saveImagesWithModifiedName(
       businessLocationImages
     );
+    business.businessLGA = businessLGA;
+    business.businessCity = businessCity;
+    business.businessState = businessState;
+    business.businessPriceRange = businessPriceRange;
     business.businessVerified = "pending";
 
     const pendingVerification = await business.save();

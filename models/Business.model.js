@@ -14,7 +14,23 @@ const businessSchema = new mongoose.Schema(
       unique: true,
       required: true,
     },
-    address: {
+    businessAddress: {
+      type: String,
+      required: true,
+    },
+    businessLGA: {
+      type: String,
+      required: true,
+    },
+    businessCity: {
+      type: String,
+      required: true,
+    },
+    businessState: {
+      type: String,
+      required: true,
+    },
+    businessPriceRange: {
       type: String,
       required: true,
     },

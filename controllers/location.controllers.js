@@ -234,12 +234,13 @@ export const addLocationtoLikedLocations = async (req, res) => {
     // Add the location to the liked locations list
     user.likedLocations.push(locationName);
 
+    const location = await Location.findOne({ locationName });
+    location && location.usersThatLiked.push(user._id);
     // Save the updated user to the database
     await user.save();
+    const updatedLocation = await location.save();
 
-    res
-      .status(200)
-      .json({ message: "Location added to liked locations.", user });
+    res.status(201).json(updatedLocation);
   } catch (error) {
     res.status(500).json({ error: "Internal server error." });
   }
