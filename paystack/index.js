@@ -11,13 +11,10 @@ payRouter.post(
   "/verify",
   passport.authenticate("business", { session: false }),
   async (req, res) => {
-    const { reference } = req.body; // Assuming the reference is in req.body.reference
-    console.log(reference);
+    const { reference } = req.body;
 
     try {
       const verifyResponse = await paystack.transaction.verify({ reference });
-
-      console.log(verifyResponse.data.authorization);
 
       if (verifyResponse.data.status === "abandoned") {
         return res.json({
@@ -41,7 +38,6 @@ payRouter.post(
           signature,
         } = verifyResponse.data.authorization;
         const user = req.user;
-        console.log(user);
         user.businessCardAuthorizationCode = authorization_code;
         user.businessCardBin = bin;
         user.businessCardLast4Digit = last4;
