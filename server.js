@@ -13,6 +13,7 @@ import businessRouter from "./routes/business.routes.js";
 import locationRouter from "./routes/location.routes.js";
 import userRouter from "./routes/user.routes.js";
 import { JwtPassport } from "./config/passport.js";
+import payRouter from "./paystack/index.js";
 
 /* CONFIGURATIONS */
 dotenv.config();
@@ -138,6 +139,7 @@ JwtPassport(passport);
 app.use("/api/user", userRouter);
 app.use("/api/business", businessRouter);
 app.use("/api/location", locationRouter);
+app.use("/api/pay", payRouter);
 app.get(
   "/api/categories",
   passport.authenticate(["business", "jwt"], { session: false }),

@@ -16,23 +16,27 @@ const businessSchema = new mongoose.Schema(
     },
     businessAddress: {
       type: String,
-      required: true,
+      // required: true,
     },
     businessLGA: {
       type: String,
-      required: true,
+      // required: true,
     },
     businessCity: {
       type: String,
-      required: true,
+      // required: true,
     },
     businessState: {
       type: String,
-      required: true,
+      // required: true,
     },
-    businessPriceRange: {
+    businessPriceRangeFrom: {
       type: String,
-      required: true,
+      // required: true,
+    },
+    businessPriceRangeTo: {
+      type: String,
+      // required: true,
     },
     businessEmail: {
       type: String,
@@ -61,6 +65,9 @@ const businessSchema = new mongoose.Schema(
     businessCategory: {
       type: String,
     },
+    businessSubCategory: {
+      type: String,
+    },
     businessCacProofImageURL: {
       type: Array,
       default: [],
@@ -72,6 +79,46 @@ const businessSchema = new mongoose.Schema(
     businessLocationImages: {
       type: Array,
       default: [],
+    },
+    businessCardAuthorizationCode: {
+      type: String,
+    },
+    businessCardBin: {
+      type: String,
+    },
+    businessCardLast4Digit: {
+      type: String,
+    },
+    businessCardExpiryMonth: {
+      type: String,
+    },
+    businessCardExpiryYear: {
+      type: String,
+    },
+    businessCardChannel: {
+      type: String,
+    },
+    businessCardType: {
+      type: String,
+    },
+    businessCardBank: {
+      type: String,
+    },
+    businessCardCountryCode: {
+      type: String,
+    },
+    businessCardBrand: {
+      type: String,
+    },
+    businessCardReusable: {
+      type: Boolean,
+    },
+    businessCardSignature: {
+      type: String,
+    },
+    addedCard: {
+      type: Boolean,
+      default: false,
     },
   },
   {

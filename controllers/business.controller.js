@@ -39,7 +39,7 @@ export const registerBusiness = async (req, res, next) => {
     {
       businessName: businessName,
       businessEmail: businessEmail,
-      address: address,
+      businessAddress: address,
       password: hashedPassword,
       verificationCode: verificationCode,
     },
@@ -152,7 +152,9 @@ export const completeBusinessRegistration = async (req, res) => {
       businessLGA,
       businessCity,
       businessState,
-      businessPriceRange,
+      businessPriceRangeFrom,
+      businessPriceRangeTo,
+      businessSubCategory,
     } = req?.body;
 
     const businessLocationImages = req.files.businessLocationImages;
@@ -167,6 +169,8 @@ export const completeBusinessRegistration = async (req, res) => {
     business.businessCategory = businessCategory
       .toLowerCase()
       .replace(/\s+/g, "-");
+    business.businessSubCategory = businessSubCategory;
+
     business.businessEmail = businessEmail;
     business.businessTelephone = businessTelephone;
     business.businessCacProofImageURL = await saveImagesWithModifiedName(
@@ -181,7 +185,8 @@ export const completeBusinessRegistration = async (req, res) => {
     business.businessLGA = businessLGA;
     business.businessCity = businessCity;
     business.businessState = businessState;
-    business.businessPriceRange = businessPriceRange;
+    business.businessPriceRangeFrom = businessPriceRangeFrom;
+    business.businessPriceRangeTo = businessPriceRangeTo;
     business.businessVerified = "pending";
 
     const pendingVerification = await business.save();
