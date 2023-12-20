@@ -13,7 +13,7 @@ import businessRouter from "./routes/business.routes.js";
 import locationRouter from "./routes/location.routes.js";
 import userRouter from "./routes/user.routes.js";
 import { JwtPassport } from "./config/passport.js";
-import payRouter from "./paystack/index.js";
+import payRouter from "./routes/paystack.routes.js";
 
 /* CONFIGURATIONS */
 dotenv.config();
