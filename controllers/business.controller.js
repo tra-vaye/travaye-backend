@@ -1,9 +1,14 @@
 import bcrypt from "bcryptjs";
+import { readFileSync } from 'fs';
+import path from 'path';
 import { Business } from "../models/Business.model.js";
 
 import jwt from "jsonwebtoken";
 import sendVerifyEmail from "../services/index.service.js";
 import { Location } from "../models/Location.model.js";
+import { sendEmail } from "../services/mail/mail.service.js";
+import { dirname } from "../lib/index.js";
+import { render } from "pug";
 const saveImagesWithModifiedName = async (files) => {
   const imageUrls = [];
   // console.log(files);
@@ -56,7 +61,13 @@ export const registerBusiness = async (req, res, next) => {
           expiresIn: "1d",
         });
         req.headers.authorization = `Bearer ${token}`;
-        sendVerifyEmail(businessEmail, verificationCode);
+        // sendVerifyEmail(businessEmail, verificationCode);
+        sendEmail(businessEmail, render(readFileSync(
+          path.resolve(dirname(import.meta.url), '../views/email/verification-code.pug')
+        ), {
+          code: verificationCode,
+          filename: 'verification-code.pug'
+        }), "E-mail Verification");
         next();
       }
 

@@ -3,6 +3,10 @@ import { User } from '../models/User.model.js';
 import sendVerifyEmail from '../services/index.service.js';
 import jwt from 'jsonwebtoken';
 import path from 'path';
+import { sendEmail } from '../services/mail/mail.service.js';
+import { render } from 'pug';
+import { dirname } from '../lib/index.js';
+import { readFileSync } from 'fs';
 
 export const registerUser = async (req, res, next) => {
 	const username = req.body?.username;
@@ -36,7 +40,19 @@ export const registerUser = async (req, res, next) => {
 					expiresIn: '1d',
 				});
 				req.headers.authorization = `Bearer ${token}`;
-				sendVerifyEmail(email, verificationCode);
+				const mail = render(
+					readFileSync(
+						path.resolve(
+							dirname(import.meta.url),
+							'../views/email/verification-code.pug'
+						)
+					),
+					{
+						code: verificationCode,
+					}
+				);
+
+				sendEmail(email, mail, "E-mail Verification")
 				next();
 			}
 

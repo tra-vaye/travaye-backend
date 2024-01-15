@@ -14,17 +14,29 @@ import locationRouter from "./routes/location.routes.js";
 import userRouter from "./routes/user.routes.js";
 import { JwtPassport } from "./config/passport.js";
 import payRouter from "./routes/paystack.routes.js";
+import path from 'path';
+import { fileURLToPath } from "url";
+import { render } from "pug";
+import { readFileSync } from "fs";
+import { dirname } from "./lib/index.js";
+import { sendEmail } from "./services/mail/mail.service.js";
 
 /* CONFIGURATIONS */
 dotenv.config();
 const app = express();
 app.use(morgan("common"));
 
+
+app.set("view engine", "pug");
+app.set("views", path.join(dirname(import.meta.url), '/views/'));
+
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(morgan("common"));
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
+
+app.use(express.static(path.join(dirname(import.meta.url), 'public/')));
 
 var whitelist = [
   "http://localhost:3000",
