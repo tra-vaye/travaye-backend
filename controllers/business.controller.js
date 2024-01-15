@@ -3,6 +3,7 @@ import { Business } from "../models/Business.model.js";
 
 import jwt from "jsonwebtoken";
 import sendVerifyEmail from "../services/index.service.js";
+import { Location } from "../models/Location.model.js";
 const saveImagesWithModifiedName = async (files) => {
   const imageUrls = [];
   // console.log(files);
@@ -138,7 +139,7 @@ export const verifyBusiness = async (req, res) => {
   // );
   user.emailVerified = true;
   await user.save();
-  res.status(200).json({ user });
+  return res.status(200).json({ user });
 };
 
 export const completeBusinessRegistration = async (req, res) => {
@@ -190,6 +191,24 @@ export const completeBusinessRegistration = async (req, res) => {
     business.businessVerified = "pending";
 
     const pendingVerification = await business.save();
+
+    const location = new Location({
+      locationName: businessName,
+      locationAddress: businessAddress,
+      locationCity:  businessCity,
+      locationState: businessState,
+      locationLGA: businessLGA,
+      locationLandmark: "landmark",
+      locationRating: 0,
+      locationDescription: businessCategory,
+      locationImagePath: business.businessLocationImages,
+      locationCategory: businessCategory,
+      locationAddedBy: req.user.email,
+      locationSubCategory: businessSubCategory,
+    });
+
+    await location.save();
+
     return res.status(200).json({ pendingVerification });
   } catch (error) {
     return res.status(400).json({
