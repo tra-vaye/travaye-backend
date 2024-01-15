@@ -120,6 +120,7 @@ const businessSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    profilePhoto: String
   },
   {
     timestamps: true,
