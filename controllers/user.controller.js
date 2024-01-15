@@ -123,3 +123,16 @@ export const updateProfilePhoto = async (req, res) => {
 
 	return res.status(400).json({ message: 'Invalid file type.' });
 };
+
+export const resendVerification = async (req, res, next) => {
+	if (!req.user) {
+		return res.status(401).json({ message: 'Unauthorized' });
+	}
+
+	if (req.user.emailVerified) {
+		return res.status(403).json({ message: 'Already verified' });
+	}
+
+	sendVerifyEmail(req.user.email, req.user.verificationCode);
+	return res.status(200).json({ message: 'Successful' });
+};

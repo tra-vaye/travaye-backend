@@ -7,6 +7,7 @@ import {
 	verifyUser,
 	getUser,
 	updateProfilePhoto,
+	resendVerification
 } from '../controllers/user.controller.js';
 import { upload } from '../config/multer.js';
 
@@ -50,6 +51,9 @@ userRouter.route('/login').post(loginUser);
 userRouter
 	.route('/verify')
 	.post(passport.authenticate('jwt', { session: false }), verifyUser);
+userRouter
+	.route('/resend-verification')
+	.post(passport.authenticate('jwt', { session: false }), resendVerification);
 
 userRouter
 	.route('/profile-photo')
