@@ -61,7 +61,6 @@ export const registerBusiness = async (req, res, next) => {
           expiresIn: "1d",
         });
         req.headers.authorization = `Bearer ${token}`;
-        // sendVerifyEmail(businessEmail, verificationCode);
         sendEmail(businessEmail, render(readFileSync(
           path.resolve(dirname(import.meta.url), '../views/email/verification-code.pug')
         ), {
