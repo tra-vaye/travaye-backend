@@ -13,6 +13,7 @@ export const registerUser = async (req, res, next) => {
 	const email = req.body?.email;
 	const password = req.body?.password;
 	const fullName = req.body?.fullName;
+	const occupation = req.body?.occupation;
 
 	// Encryption
 	const salt = await bcrypt.genSalt(13);
@@ -27,6 +28,7 @@ export const registerUser = async (req, res, next) => {
 			fullName: fullName,
 			password: hashedPassword,
 			verificationCode: verificationCode,
+			occupation,
 		},
 		password,
 		async function (err, user) {

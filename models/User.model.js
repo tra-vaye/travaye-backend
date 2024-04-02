@@ -38,7 +38,8 @@ const userSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
-    profilePhoto: String
+    profilePhoto: String,
+    occupation: String,
   },
   {
     timestamps: true,
