@@ -26,6 +26,7 @@ userRouter
 			'jwt',
 			{ session: false },
 			function (err, user, info) {
+				console.log(err, user, info);
 				if (err) {
 					return next(err);
 				}

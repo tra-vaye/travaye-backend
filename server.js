@@ -15,11 +15,7 @@ import userRouter from "./routes/user.routes.js";
 import { JwtPassport } from "./config/passport.js";
 import payRouter from "./routes/paystack.routes.js";
 import path from 'path';
-import { fileURLToPath } from "url";
-import { render } from "pug";
-import { readFileSync } from "fs";
 import { dirname } from "./lib/index.js";
-import { sendEmail } from "./services/mail/mail.service.js";
 
 /* CONFIGURATIONS */
 dotenv.config();

@@ -18,7 +18,7 @@ export const registerUser = async (req, res, next) => {
 	const salt = await bcrypt.genSalt(13);
 	const hashedPassword = await bcrypt.hash(password, salt);
 	// Random Four digit code
-	// Generate a random 4-digit code
+	// Generates a random 4-digit code
 	let verificationCode = Math.floor(Math.random() * 9000) + 1000;
 	User.register(
 		{
@@ -32,31 +32,31 @@ export const registerUser = async (req, res, next) => {
 		function (err, user) {
 			if (err) {
 				console.log(err);
-				res.status(400).json({
+				return res.status(400).json({
 					error: 'A User with the given username or email exists',
 				});
-			} else if (!err) {
-				const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-					expiresIn: '1d',
-				});
-				req.headers.authorization = `Bearer ${token}`;
+			}
+			const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+				expiresIn: '1d',
+			});
+			req.headers.authorization = `Bearer ${token}`;
+
+			try {
 				const mail = render(
 					readFileSync(
-						path.resolve(
-							dirname(import.meta.url),
-							'../views/email/verification-code.pug'
-						)
+						path.resolve(dirname(import.meta.url), "../views/email/verification-code.pug")
 					),
 					{
 						code: verificationCode,
+						filename: 'verification-code'
 					}
 				);
-
-				sendEmail(email, mail, "E-mail Verification")
-				next();
+	
+				sendEmail(email, mail, 'E-mail Verification');
+			} catch (error) {
+				console.error(error)
 			}
-
-			// go to the next middleware
+			return next();
 		}
 	);
 };
