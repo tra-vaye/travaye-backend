@@ -26,7 +26,6 @@ userRouter
 			'jwt',
 			{ session: false },
 			function (err, user, info) {
-				console.log(err, user, info);
 				if (err) {
 					return next(err);
 				}
@@ -41,9 +40,7 @@ userRouter
 
 				user.password = undefined;
 
-				const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-					expiresIn: '1d',
-				});
+				const token = req.headers.authorization?.split('Bearer ')[1];
 				return res.status(201).json({ user, token });
 			}
 		)(req, res, next);

@@ -29,7 +29,7 @@ export const registerUser = async (req, res, next) => {
 			verificationCode: verificationCode,
 		},
 		password,
-		function (err, user) {
+		async function (err, user) {
 			if (err) {
 				console.log(err);
 				return res.status(400).json({
@@ -52,7 +52,7 @@ export const registerUser = async (req, res, next) => {
 					}
 				);
 	
-				sendEmail(email, mail, 'E-mail Verification');
+				await sendEmail(email, mail, 'E-mail Verification');
 			} catch (error) {
 				console.error(error)
 			}
@@ -149,6 +149,6 @@ export const resendVerification = async (req, res, next) => {
 		return res.status(403).json({ message: 'Already verified' });
 	}
 
-	sendVerifyEmail(req.user.email, req.user.verificationCode);
+	await sendVerifyEmail(req.user.email, req.user.verificationCode);
 	return res.status(200).json({ message: 'Successful' });
 };

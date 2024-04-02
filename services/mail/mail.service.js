@@ -23,39 +23,44 @@ let transporter = nodemailer.createTransport({
 // };
 
 // Send an email message using the authenticated transporter
-export const sendVerifyEmail = (userEmail, code) => {
-	transporter
-		.sendMail({
-			from: `${process.env.COMPANY_EMAIL}`,
-			to: `${userEmail}`,
-			subject: 'Test Email',
-			text: `Thank you for signing up to Travaye ✨✨. Here is your verification code ${code}`,
-		})
-		.then(console.log)
-		.catch(console.error);
+export const sendVerifyEmail = async (userEmail, code) => {
+	try {
+		const message = await transporter
+			.sendMail({
+				from: `${process.env.COMPANY_EMAIL}`,
+				to: `${userEmail}`,
+				subject: 'Test Email',
+				text: `Thank you for signing up to Travaye ✨✨. Here is your verification code ${code}`,
+			});
+		return console.log(message);
+	} catch (error) {
+		return console.error(error);
+	}
 };
 
-export const sendEmail = (
+export const sendEmail = async (
 	to,
 	message,
 	subject = 'Travaye',
 	attachments = []
 ) => {
-	transporter
-		.sendMail({
-			from: `${process.env.COMPANY_EMAIL}`,
-			to,
-			subject: subject,
-			html: message,
-			attachments: [
-				{
-					filename: 'image.png',
-					path: path.resolve(dirname(import.meta.url), '../../public/logo.png'),
-					cid: 'logo@travaye.ng',
-				},
-				...attachments,
-			],
-		})
-		.then(console.log)
-		.catch(console.error);
+	try {
+		const result = await transporter
+			.sendMail({
+				from: `${process.env.COMPANY_EMAIL}`,
+				to,
+				subject: subject,
+				html: message,
+				attachments: [
+					{
+						filename: 'image.png',
+						path: path.resolve(dirname(import.meta.url), '../../public/logo.png'),
+						cid: 'logo@travaye.ng',
+					},
+					...attachments,
+				],
+			});
+	} catch (error) {
+		console.error(error);
+	}
 };
