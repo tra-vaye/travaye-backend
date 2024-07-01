@@ -2,6 +2,8 @@ import dotenv from "dotenv";
 import { Location } from "../models/Location.model.js";
 import { User } from "../models/User.model.js";
 
+import LocationBudget from "../models/LocationBudget.js";
+
 // This function works as an organizer for multiple images to avoid images having same name
 dotenv.config();
 

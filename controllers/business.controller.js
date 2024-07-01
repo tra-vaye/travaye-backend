@@ -163,8 +163,8 @@ export const completeBusinessRegistration = async (req, res) => {
       businessLGA,
       businessCity,
       businessState,
-      businessPriceRangeFrom,
-      businessPriceRangeTo,
+      businessBudget,
+      // businessPriceRangeTo,
       businessSubCategory,
     } = req?.body;
 
@@ -199,6 +199,7 @@ export const completeBusinessRegistration = async (req, res) => {
     business.businessPriceRangeFrom = businessPriceRangeFrom;
     business.businessPriceRangeTo = businessPriceRangeTo;
     business.businessVerified = "pending";
+    business.budget = businessBudget;
 
     const pendingVerification = await business.save();
 
